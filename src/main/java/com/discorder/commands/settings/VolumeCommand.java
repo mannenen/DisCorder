@@ -1,7 +1,8 @@
-package com.discordecho.commands.settings;
+package com.discorder.commands.settings;
 
-import com.discordecho.DiscordEcho;
-import com.discordecho.commands.Command;
+import com.discorder.DisCorder;
+import com.discorder.commands.Command;
+import com.discorder.configuration.Config;
 
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
@@ -14,8 +15,8 @@ public class VolumeCommand implements Command {
 
     public void action(String[] args, GuildMessageReceivedEvent e) {
         if (args.length != 1) {
-            String prefix = DiscordEcho.serverSettings.get(e.getGuild().getId()).prefix;
-            DiscordEcho.sendMessage(e.getChannel(), usage(prefix));
+            String prefix = Config.getCommandPrefix();
+            DisCorder.sendMessage(e.getChannel(), usage(prefix));
             return;
         }
 
@@ -24,20 +25,19 @@ public class VolumeCommand implements Command {
 
             if (num > 0 && num <= 100) {
                 double percent = (double) num / 100.0;
-                DiscordEcho.serverSettings.get(e.getGuild().getId()).volume = percent;
-                DiscordEcho.writeSettingsJson();
+                Config.setDefaultVolume(percent);
 
-                DiscordEcho.sendMessage(e.getChannel(), "Volume set to " + num + "% for next recording!");
+                DisCorder.sendMessage(e.getChannel(), "Volume set to " + num + "% for next recording!");
 
             } else {
-                String prefix = DiscordEcho.serverSettings.get(e.getGuild().getId()).prefix;
-                DiscordEcho.sendMessage(e.getChannel(), usage(prefix));
+                String prefix = Config.getCommandPrefix();
+                DisCorder.sendMessage(e.getChannel(), usage(prefix));
                 return;
             }
 
         } catch (Exception ex) {
-            String prefix = DiscordEcho.serverSettings.get(e.getGuild().getId()).prefix;
-            DiscordEcho.sendMessage(e.getChannel(), usage(prefix));
+            String prefix = Config.getCommandPrefix();
+            DisCorder.sendMessage(e.getChannel(), usage(prefix));
             return;
         }
     }

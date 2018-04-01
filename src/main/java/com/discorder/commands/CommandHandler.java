@@ -1,24 +1,16 @@
-package com.discordecho.commands;
+package com.discorder.commands;
 
 import java.util.HashMap;
-
-import com.discordecho.DiscordEcho;
-import com.discordecho.configuration.ServerSettings;
 
 public class CommandHandler {
     public static final CommandParser parser = new CommandParser();
     public static HashMap<String, Command> commands = new HashMap<>();
 
     public static void handleCommand(CommandParser.CommandContainer cmd){
-        ServerSettings settings = DiscordEcho.serverSettings.get(cmd.e.getGuild().getId());
 
-        if (commands.containsKey(cmd.invoke.toLowerCase()) || settings.aliases.containsKey(cmd.invoke.toLowerCase())) {
+        if (commands.containsKey(cmd.invoke.toLowerCase())) {
 
-            String invoke;
-            if (settings.aliases.containsKey(cmd.invoke.toLowerCase()))
-                invoke = settings.aliases.get(cmd.invoke);
-            else
-                invoke = cmd.invoke;
+            String invoke = cmd.invoke;
                 
             Boolean safe = commands.get(invoke).called(cmd.args, cmd.e);
 

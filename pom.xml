@@ -2,11 +2,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.DiscordEcho</groupId>
-    <artifactId>RecorDiscord</artifactId>
+    <groupId>com.discordecho</groupId>
+    <artifactId>DisCorder</artifactId>
     <version>0.1-prealpha</version>
 
-    <name>RecorDiscord</name>
+    <name>DisCorder</name>
     <description>A voice recorder for Discord, forked from DiscordEcho by ajm1996</description>
 
     <properties>
@@ -36,6 +36,11 @@
             <groupId>net.sourceforge</groupId>
             <artifactId>lame</artifactId>
             <version>3.98.4</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
         </dependency>
     </dependencies>
 

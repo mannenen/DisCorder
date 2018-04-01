@@ -1,4 +1,4 @@
-package com.discordecho.listeners;
+package com.discorder.listeners;
 
 import java.util.Arrays;
 
@@ -19,16 +19,19 @@ public class AudioSendListener implements AudioSendHandler
         }
     }
 
+    @Override
     public boolean canProvide() {
         return canProvide;
     }
 
+    @Override
     public byte[] provide20MsAudio() {
         if (index == voiceData.length - 1)
             canProvide = false;
         return voiceData[index++];
     }
 
+    @Override
     public boolean isOpus() {
         return false;
     }

@@ -1,4 +1,4 @@
-package com.discordecho.commands;
+package com.discorder.commands;
 
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 

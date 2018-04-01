@@ -1,4 +1,4 @@
-package com.discordecho.configuration;
+package com.discorder.configuration;
 
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -39,8 +39,5 @@ public class ServerSettings {
         this.prefix = "!";
         this.volume = 0.8;
         this.defaultTextChannel = g.getAfkChannel().getId();
-
-
-
     }
 }

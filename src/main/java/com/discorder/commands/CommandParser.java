@@ -1,4 +1,4 @@
-package com.discordecho.commands;
+package com.discorder.commands;
 
 import java.util.ArrayList;
 
