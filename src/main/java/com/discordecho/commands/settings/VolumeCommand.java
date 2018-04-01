@@ -1,18 +1,17 @@
-package com.DiscordEcho.Commands.Settings;
+package com.discordecho.commands.settings;
 
-import com.DiscordEcho.Commands.Command;
-import com.DiscordEcho.DiscordEcho;
+import com.discordecho.DiscordEcho;
+import com.discordecho.commands.Command;
+
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 
 public class VolumeCommand implements Command {
 
-    @Override
     public Boolean called(String[] args, GuildMessageReceivedEvent e){
         return true;
     }
 
-    @Override
     public void action(String[] args, GuildMessageReceivedEvent e) {
         if (args.length != 1) {
             String prefix = DiscordEcho.serverSettings.get(e.getGuild().getId()).prefix;
@@ -43,17 +42,14 @@ public class VolumeCommand implements Command {
         }
     }
 
-    @Override
     public String usage(String prefix) {
         return prefix + "volume [1-100]";
     }
 
-    @Override
     public String descripition() {
         return "Sets the percentage volume to record at, from 1-100%";
     }
 
-    @Override
     public void executed(boolean success, GuildMessageReceivedEvent e){
         return;
     }

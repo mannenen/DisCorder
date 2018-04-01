@@ -1,12 +1,19 @@
-package com.DiscordEcho.Listeners;
+package com.discordecho.listeners;
 
-import com.DiscordEcho.Commands.Command;
-import com.DiscordEcho.DiscordEcho;
-import com.DiscordEcho.Commands.CommandHandler;
-import com.DiscordEcho.Configuration.ServerSettings;
+import static java.lang.Thread.sleep;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+
+import com.discordecho.DiscordEcho;
+import com.discordecho.commands.CommandHandler;
+import com.discordecho.configuration.ServerSettings;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import net.dv8tion.jda.core.EmbedBuilder;
+
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -19,16 +26,6 @@ import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashMap;
-
-import static java.lang.Thread.sleep;
 
 
 public class EventListener extends ListenerAdapter {
@@ -157,80 +154,7 @@ public class EventListener extends ListenerAdapter {
     }
 
     @Override
-    public void onPrivateMessageReceived(PrivateMessageReceivedEvent e) {
-        if(e.getAuthor() == null || e.getAuthor().isBot())
-            return;
-
-        if (e.getMessage().getContent().startsWith("!alerts")) {
-            if (e.getMessage().getContent().endsWith("off")) {
-                for (Guild g : e.getJDA().getGuilds()) {
-                    if (g.getMember(e.getAuthor()) != null) {
-                        DiscordEcho.serverSettings.get(g.getId()).alertBlackList.add(e.getAuthor().getId());
-                    }
-                }
-                e.getChannel().sendMessage("Alerts now off, message `!alerts on` to re-enable at any time").queue();
-                DiscordEcho.writeSettingsJson();
-
-            }
-
-            else if (e.getMessage().getContent().endsWith("on")) {
-                for (Guild g : e.getJDA().getGuilds()) {
-                    if (g.getMember(e.getAuthor()) != null) {
-                        DiscordEcho.serverSettings.get(g.getId()).alertBlackList.remove(e.getAuthor().getId());
-                    }
-                }
-                e.getChannel().sendMessage("Alerts now on, message `!alerts off` to disable at any time").queue();
-                DiscordEcho.writeSettingsJson();
-            }
-            else {
-                e.getChannel().sendMessage("!alerts [on | off]").queue();
-            }
-
-        /* removed because prefix and aliases are dependent on guild, which cannot be assumed without a message sent from guild
-        } else if (e.getMessage().getContent().startsWith("!help")) {
-
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setAuthor("Discord Echo", "http://DiscordEcho.com/", e.getJDA().getSelfUser().getAvatarUrl());
-            embed.setColor(Color.RED);
-            embed.setTitle("Currently in beta, being actively developed and tested. Expect bugs.");
-            embed.setDescription("Join my guild for updates - https://discord.gg/JWNFSZJ");
-            embed.setThumbnail("http://www.freeiconspng.com/uploads/information-icon-5.png");
-            embed.setFooter("Replace brackets [] with item specified. Vertical bar | means 'or', either side of bar is valid choice.", "http://www.niceme.me");
-            embed.addBlankField(false);
-
-            Object[] cmds = CommandHandler.commands.keySet().toArray();
-            Arrays.sort(cmds);
-            for (Object command : cmds) {
-                if (command == "help") continue;
-                embed.addField(CommandHandler.commands.get(command).usage("!"), CommandHandler.commands.get(command).descripition(), true);
-            }
-
-            e.getChannel().sendMessage(embed.build()).queue();
-        */
-        } else {
-            e.getChannel().sendMessage("DM commands unsupported, send `!help` in your guild chat for more info.").queue();
-        }
-    }
-
-    @Override
     public void onReady(ReadyEvent e){
-        e.getJDA().getPresence().setGame(new Game() {
-            @Override
-            public String getName() {
-                return "!help | DicordEcho.com";
-            }
-
-            @Override
-            public String getUrl() {
-                return "http://DicordEcho.com";
-            }
-
-            @Override
-            public GameType getType() {
-                return GameType.DEFAULT;
-            }
-        });
-
         try {
             System.out.format("ONLINE: Connected to %s guilds!\n", e.getJDA().getGuilds().size(), e.getJDA().getVoiceChannels().size());
 

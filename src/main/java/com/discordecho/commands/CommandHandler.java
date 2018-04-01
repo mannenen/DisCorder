@@ -1,9 +1,9 @@
-package com.DiscordEcho.Commands;
-
-import com.DiscordEcho.Configuration.ServerSettings;
-import com.DiscordEcho.DiscordEcho;
+package com.discordecho.commands;
 
 import java.util.HashMap;
+
+import com.discordecho.DiscordEcho;
+import com.discordecho.configuration.ServerSettings;
 
 public class CommandHandler {
     public static final CommandParser parser = new CommandParser();

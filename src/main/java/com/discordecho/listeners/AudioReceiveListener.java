@@ -1,15 +1,16 @@
-package com.DiscordEcho.Listeners;
+package com.discordecho.listeners;
 
-import com.DiscordEcho.DiscordEcho;
+import static com.discordecho.DiscordEcho.serverSettings;
+
+import java.util.Arrays;
+
+import com.discordecho.DiscordEcho;
+
 import net.dv8tion.jda.core.audio.AudioReceiveHandler;
 import net.dv8tion.jda.core.audio.CombinedAudio;
 import net.dv8tion.jda.core.audio.UserAudio;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
-
-import java.util.Arrays;
-
-import static com.DiscordEcho.DiscordEcho.serverSettings;
 
 public class AudioReceiveListener implements AudioReceiveHandler
 {

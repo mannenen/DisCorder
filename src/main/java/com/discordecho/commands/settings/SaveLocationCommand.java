@@ -1,18 +1,17 @@
-package com.DiscordEcho.Commands.Settings;
+package com.discordecho.commands.settings;
 
-import com.DiscordEcho.Commands.Command;
-import com.DiscordEcho.DiscordEcho;
+import com.discordecho.DiscordEcho;
+import com.discordecho.commands.Command;
+
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 
 public class SaveLocationCommand implements Command {
     
-    @Override
     public Boolean called(String[] args, GuildMessageReceivedEvent e){
         return true;
     }
 
-    @Override
     public void action(String[] args, GuildMessageReceivedEvent e) {
         if (args.length > 1) {
             String prefix = DiscordEcho.serverSettings.get(e.getGuild().getId()).prefix;
@@ -45,17 +44,14 @@ public class SaveLocationCommand implements Command {
         }
     }
 
-    @Override
     public String usage(String prefix) {
         return prefix + "saveLocation | " + prefix + "saveLocation [text channel name]";
     }
 
-    @Override
     public String descripition() {
         return "Sets the text channel of message or the text channel specified as the default location to send files";
     }
 
-    @Override
     public void executed(boolean success, GuildMessageReceivedEvent e){
         return;
     }

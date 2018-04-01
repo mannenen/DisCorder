@@ -1,25 +1,24 @@
-package com.DiscordEcho.Commands.Misc;
+package com.discordecho.commands.misc;
 
-import com.DiscordEcho.Commands.Command;
-import com.DiscordEcho.Commands.CommandHandler;
-import com.DiscordEcho.DiscordEcho;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.discordecho.DiscordEcho;
+import com.discordecho.commands.Command;
+import com.discordecho.commands.CommandHandler;
+
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
+
 
 public class HelpCommand implements Command {
 
-    @Override
     public Boolean called(String[] args, GuildMessageReceivedEvent e){
         return true;
     }
 
-    @Override
     public void action(String[] args, GuildMessageReceivedEvent e) {
         if (args.length != 0) {
             String prefix = DiscordEcho.serverSettings.get(e.getGuild().getId()).prefix;
@@ -70,17 +69,14 @@ public class HelpCommand implements Command {
         e.getAuthor().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(embed.build()).queue());
     }
 
-    @Override
     public String usage(String prefix) {
         return prefix + "help";
     }
 
-    @Override
     public String descripition() {
         return "Shows all commands and their usages";
     }
 
-    @Override
     public void executed(boolean success, GuildMessageReceivedEvent e){
         return;
     }

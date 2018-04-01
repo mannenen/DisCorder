@@ -1,7 +1,8 @@
-package com.DiscordEcho.Listeners;
+package com.discordecho.listeners;
+
+import java.util.Arrays;
 
 import net.dv8tion.jda.core.audio.AudioSendHandler;
-import java.util.Arrays;
 
 
 public class AudioSendListener implements AudioSendHandler

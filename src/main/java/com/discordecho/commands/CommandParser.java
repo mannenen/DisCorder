@@ -1,9 +1,8 @@
-package com.DiscordEcho.Commands;
+package com.discordecho.commands;
 
-import com.DiscordEcho.DiscordEcho;
-import net.dv8tion.jda.core.events.message.GenericMessageEvent;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import java.util.ArrayList;
+
+import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 public class CommandParser {
     public CommandContainer parse(String raw, GuildMessageReceivedEvent e){

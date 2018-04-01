@@ -1,7 +1,8 @@
-package com.DiscordEcho.Commands.Misc;
+package com.discordecho.commands.misc;
 
-import com.DiscordEcho.Commands.Command;
-import com.DiscordEcho.DiscordEcho;
+import com.discordecho.DiscordEcho;
+import com.discordecho.commands.Command;
+
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 

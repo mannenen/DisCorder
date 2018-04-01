@@ -1,8 +1,9 @@
-package com.DiscordEcho.Commands.Settings;
+package com.discordecho.commands.settings;
 
-import com.DiscordEcho.Commands.Command;
-import com.DiscordEcho.Configuration.ServerSettings;
-import com.DiscordEcho.DiscordEcho;
+import com.discordecho.DiscordEcho;
+import com.discordecho.commands.Command;
+import com.discordecho.configuration.ServerSettings;
+
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 

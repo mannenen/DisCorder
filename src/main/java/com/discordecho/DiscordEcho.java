@@ -1,108 +1,99 @@
-package com.DiscordEcho;
+package com.discordecho;
 
-import com.DiscordEcho.Commands.*;
-import com.DiscordEcho.Commands.Audio.ClipCommand;
-import com.DiscordEcho.Commands.Audio.EchoCommand;
-import com.DiscordEcho.Commands.Audio.MessageInABottleCommand;
-import com.DiscordEcho.Commands.Audio.SaveCommand;
-import com.DiscordEcho.Commands.Misc.HelpCommand;
-import com.DiscordEcho.Commands.Misc.JoinCommand;
-import com.DiscordEcho.Commands.Misc.LeaveCommand;
-import com.DiscordEcho.Commands.Settings.*;
-import com.DiscordEcho.Configuration.ServerSettings;
-import com.DiscordEcho.Listeners.AudioReceiveListener;
-import com.DiscordEcho.Listeners.AudioSendListener;
-import com.DiscordEcho.Listeners.EventListener;
+import static java.lang.Thread.sleep;
+
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+
+import javax.security.auth.login.LoginException;
+import javax.sound.sampled.AudioFormat;
+
+import com.discordecho.commands.CommandHandler;
+import com.discordecho.commands.audio.SaveCommand;
+import com.discordecho.commands.misc.HelpCommand;
+import com.discordecho.commands.misc.JoinCommand;
+import com.discordecho.commands.misc.LeaveCommand;
+import com.discordecho.commands.settings.AutoJoinCommand;
+import com.discordecho.commands.settings.AutoLeaveCommand;
+import com.discordecho.commands.settings.PrefixCommand;
+import com.discordecho.commands.settings.SaveLocationCommand;
+import com.discordecho.commands.settings.VolumeCommand;
+import com.discordecho.configuration.ServerSettings;
+import com.discordecho.listeners.AudioReceiveListener;
+import com.discordecho.listeners.AudioSendListener;
+import com.discordecho.listeners.EventListener;
 import com.google.gson.Gson;
+
+import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.audio.AudioReceiveHandler;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.sourceforge.lame.lowlevel.LameEncoder;
 import net.sourceforge.lame.mp3.Lame;
 import net.sourceforge.lame.mp3.MPEGMode;
 
-import javax.security.auth.login.LoginException;
-import javax.sound.sampled.AudioFormat;
-import java.awt.*;
-import java.io.*;
-import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.List;
-
-import static java.lang.Thread.sleep;
-
-public class DiscordEcho
-{
+public class DiscordEcho {
     //contains the id of every guild that we are connected to and their corresponding ServerSettings object
     public static HashMap<String, ServerSettings> serverSettings = new HashMap<>();
 
-    public static void main(String[] args)
-    {
-        try
-        {
+    public static void main(String[] args) {
+        try {
             //read the bot's token from a file name "token" in the main directory
             FileReader fr = new FileReader("shark_token");
             BufferedReader br = new BufferedReader(fr);
             String token = br.readLine();
 
             //create bot instance
-            JDA api = new JDABuilder(AccountType.BOT)
-                    .setToken(token)
-                    .addListener(new EventListener())
-                    .buildBlocking();
-    }
-        catch (LoginException e)
-        {
+            JDA api = new JDABuilder(AccountType.BOT).setToken(token).addEventListener(new EventListener()).buildBlocking();
+        } catch (LoginException e) {
             //If anything goes wrong in terms of authentication, this is the exception that will represent it
             e.printStackTrace();
-        }
-        catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             //Due to the fact that buildBlocking is a blocking method, one which waits until JDA is fully loaded,
             // the waiting can be interrupted. This is the exception that would fire in that situation.
             //As a note: in this extremely simplified example this will never occur. In fact, this will never occur unless
             // you use buildBlocking in a thread that has the possibility of being interrupted (async thread usage and interrupts)
             e.printStackTrace();
-        }
-        catch (RateLimitedException e)
-        {
+        } catch (RateLimitedException e) {
             //The login process is one which can be ratelimited. If you attempt to login in multiple times, in rapid succession
             // (multiple times a second), you would hit the ratelimit, and would see this exception.
             //As a note: It is highly unlikely that you will ever see the exception here due to how infrequent login is.
             e.printStackTrace();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         //register commands and their aliases
         CommandHandler.commands.put("help", new HelpCommand());
-        
+
         CommandHandler.commands.put("join", new JoinCommand());
         CommandHandler.commands.put("leave", new LeaveCommand());
-        
+
         CommandHandler.commands.put("save", new SaveCommand());
-        CommandHandler.commands.put("clip", new ClipCommand());
-        CommandHandler.commands.put("echo", new EchoCommand());
-        CommandHandler.commands.put("miab", new MessageInABottleCommand());
-                
+
         CommandHandler.commands.put("autojoin", new AutoJoinCommand());
         CommandHandler.commands.put("autoleave", new AutoLeaveCommand());
-        
+
         CommandHandler.commands.put("prefix", new PrefixCommand());
-        CommandHandler.commands.put("alias", new AliasCommand());
-        CommandHandler.commands.put("removealias", new RemoveAliasCommand());
         CommandHandler.commands.put("volume", new VolumeCommand());
-        CommandHandler.commands.put("autosave", new AutoSaveCommand());
         CommandHandler.commands.put("savelocation", new SaveLocationCommand());
-        CommandHandler.commands.put("alerts", new AlertsCommand());
 
     }
-
-
 
     //UTILITY FUNCTIONS
 
@@ -115,7 +106,7 @@ public class DiscordEcho
             //does current interation beat old biggest?
             if (voiceChannelSize(v) > large) {
                 ServerSettings settings = serverSettings.get(v.getGuild().getId());
-                
+
                 //we only want servers that beat the autojoin minimum (so we don't have to check later)
                 if (voiceChannelSize(v) >= settings.autoJoinSettings.get(v.getId())) {
                     biggest = v;
@@ -128,11 +119,13 @@ public class DiscordEcho
 
     //returns the effective size of the voice channel (bots don't count)
     public static int voiceChannelSize(VoiceChannel vc) {
-        if (vc == null) return 0;
+        if (vc == null)
+            return 0;
 
         int i = 0;
-        for (Member m : vc.getMembers()){
-            if(!m.getUser().isBot()) i++;
+        for (Member m : vc.getMembers()) {
+            if (!m.getUser().isBot())
+                i++;
         }
         return i;
     }
@@ -148,7 +141,7 @@ public class DiscordEcho
     public static void writeToFile(Guild guild, int time, TextChannel tc) {
         if (tc == null)
             tc = guild.getTextChannelById(serverSettings.get(guild.getId()).defaultTextChannel);
-        
+
         AudioReceiveListener ah = (AudioReceiveListener) guild.getAudioManager().getReceiveHandler();
         if (ah == null) {
             sendMessage(tc, "I wasn't recording!");
@@ -177,8 +170,9 @@ public class DiscordEcho
             fos.write(voiceData);
             fos.close();
 
-            System.out.format("Saving audio file '%s' from %s on %s of size %f MB\n",
-                    dest.getName(), guild.getAudioManager().getConnectedChannel().getName(), guild.getName(), (double) dest.length() / 1024 / 1024);
+            System.out.format("Saving audio file '%s' from %s on %s of size %f MB\n", dest.getName(),
+                    guild.getAudioManager().getConnectedChannel().getName(), guild.getName(),
+                    (double) dest.length() / 1024 / 1024);
 
             if (dest.length() / 1024 / 1024 < 8) {
                 final TextChannel channel = tc;
@@ -188,7 +182,10 @@ public class DiscordEcho
                 });
 
                 new Thread(() -> {
-                    try { sleep(1000 * 20); } catch (Exception ex) {}    //20 second life for files set to discord (no need to save)
+                    try {
+                        sleep(1000 * 20);
+                    } catch (Exception ex) {
+                    } //20 second life for files set to discord (no need to save)
 
                     dest.delete();
                     System.out.println("\tDeleting file " + dest.getName() + "...");
@@ -199,7 +196,10 @@ public class DiscordEcho
                 sendMessage(tc, "http://DiscordEcho.com/" + dest.getName());
 
                 new Thread(() -> {
-                    try { sleep(1000 * 60 * 60); } catch (Exception ex) {}    //1 hour life for files stored on web server
+                    try {
+                        sleep(1000 * 60 * 60);
+                    } catch (Exception ex) {
+                    } //1 hour life for files stored on web server
 
                     dest.delete();
                     System.out.println("\tDeleting file " + dest.getName() + "...");
@@ -224,29 +224,35 @@ public class DiscordEcho
             fw.flush();
             fw.close();
 
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
     }
 
     //sends alert DM to anyone in the given voicechannel who isn't on the blacklist
     public static void alert(VoiceChannel vc) {
         for (Member m : vc.getMembers()) {
             //ignore bots
-            if(m.getUser().isBot()) continue;
+            if (m.getUser().isBot())
+                continue;
 
             //check the guild's blacklist and ignore the user if they are on it
             if (!serverSettings.get(vc.getGuild().getId()).alertBlackList.contains(m.getUser().getId())) {
 
                 //make an embeded alert message to warn the user
                 EmbedBuilder embed = new EmbedBuilder();
-                embed.setAuthor("Discord Echo", "https://devpost.com/software/discord-recorder", vc.getJDA().getSelfUser().getAvatarUrl());
+                embed.setAuthor("Discord Echo", "https://devpost.com/software/discord-recorder",
+                        vc.getJDA().getSelfUser().getAvatarUrl());
                 embed.setColor(Color.RED);
-                embed.setTitle("Your audio is now being recorded in '" + vc.getName() + "' on '" + vc.getGuild().getName() + "'");
+                embed.setTitle("Your audio is now being recorded in '" + vc.getName() + "' on '"
+                        + vc.getGuild().getName() + "'");
                 embed.setDescription("Disable this alert with `!alerts off`");
-                embed.setThumbnail("http://www.freeiconspng.com/uploads/alert-icon-png-red-alert-round-icon-clip-art-3.png");
+                embed.setThumbnail(
+                        "http://www.freeiconspng.com/uploads/alert-icon-png-red-alert-round-icon-clip-art-3.png");
                 embed.setTimestamp(OffsetDateTime.now());
 
                 //open private channel with the user and send the embeded message
-                m.getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(embed.build()).queue());
+                m.getUser().openPrivateChannel()
+                        .queue(privateChannel -> privateChannel.sendMessage(embed.build()).queue());
 
             }
         }
@@ -262,23 +268,24 @@ public class DiscordEcho
             salt.append(SALTCHARS.charAt(index));
         }
         String saltStr = salt.toString();
-        
+
         //check for a collision on the 1/2e23 chance that it matches another salt string (lul)
         File dir = new File("/var/www/html/");
         if (!dir.exists())
             dir = new File("recordings/");
-        
+
         for (File f : dir.listFiles()) {
             if (f.getName().equals(saltStr))
                 saltStr = getPJSaltString();
         }
-        
+
         return saltStr;
     }
 
     //encode the passed array of PCM (uncompressed) audio to mp3 audio data
     public static byte[] encodePcmToMp3(byte[] pcm) {
-        LameEncoder encoder = new LameEncoder(new AudioFormat(48000.0f, 16, 2, true, true), 128, MPEGMode.STEREO, Lame.QUALITY_HIGHEST, false);
+        LameEncoder encoder = new LameEncoder(new AudioFormat(48000.0f, 16, 2, true, true), 128, MPEGMode.STEREO,
+                Lame.QUALITY_HIGHEST, false);
         ByteArrayOutputStream mp3 = new ByteArrayOutputStream();
         byte[] buffer = new byte[encoder.getPCMBufferSize()];
 
@@ -320,7 +327,8 @@ public class DiscordEcho
     //general purpose function that sends a message to the given text channel and handles errors
     public static void sendMessage(TextChannel tc, String message) {
         tc.sendMessage("\u200B" + message).queue(null, (Throwable) -> {
-            tc.getGuild().getPublicChannel().sendMessage("\u200BI don't have permissions to send messages in " + tc.getName() + "!").queue();
+            tc.getGuild().getPublicChannel()
+                    .sendMessage("\u200BI don't have permissions to send messages in " + tc.getName() + "!").queue();
         });
     }
 
@@ -331,7 +339,8 @@ public class DiscordEcho
         //don't join afk channels
         if (vc == vc.getGuild().getAfkChannel()) {
             if (warning) {
-                TextChannel tc = vc.getGuild().getTextChannelById(serverSettings.get(vc.getGuild().getId()).defaultTextChannel);
+                TextChannel tc = vc.getGuild()
+                        .getTextChannelById(serverSettings.get(vc.getGuild().getId()).defaultTextChannel);
                 sendMessage(tc, "I don't join afk channels!");
             }
         }
@@ -341,7 +350,8 @@ public class DiscordEcho
             vc.getGuild().getAudioManager().openAudioConnection(vc);
         } catch (Exception e) {
             if (warning) {
-                TextChannel tc = vc.getGuild().getTextChannelById(serverSettings.get(vc.getGuild().getId()).defaultTextChannel);
+                TextChannel tc = vc.getGuild()
+                        .getTextChannelById(serverSettings.get(vc.getGuild().getId()).defaultTextChannel);
                 sendMessage(tc, "I don't have permission to join " + vc.getName() + "!");
                 return;
             }
@@ -349,7 +359,7 @@ public class DiscordEcho
 
         //send alert to correct users in the voice channel
         DiscordEcho.alert(vc);
-        
+
         //initalize the audio reciever listener
         double volume = DiscordEcho.serverSettings.get(vc.getGuild().getId()).volume;
         vc.getGuild().getAudioManager().setReceivingHandler(new AudioReceiveListener(volume, vc));

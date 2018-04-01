@@ -1,4 +1,4 @@
-package com.DiscordEcho.Configuration;
+package com.discordecho.configuration;
 
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
