@@ -50,7 +50,7 @@ public class HelpCommand implements Command {
             }
 
             if (aliases.size() == 0)
-                embed.addField(cmd.usage(prefix), cmd.descripition(), true);
+                embed.addField(cmd.usage(prefix), cmd.description(), true);
             else {
                 String descripition = "";
                 descripition += "Aliases: ";
@@ -59,7 +59,7 @@ public class HelpCommand implements Command {
                 
                 //remove extra comma
                 descripition = descripition.substring(0, descripition.lastIndexOf(','));
-                descripition += ". " + cmd.descripition();
+                descripition += ". " + cmd.description();
                 embed.addField(cmd.usage(prefix), descripition, true);
             }
         }
@@ -73,7 +73,7 @@ public class HelpCommand implements Command {
         return prefix + "help";
     }
 
-    public String descripition() {
+    public String description() {
         return "Shows all commands and their usages";
     }
 

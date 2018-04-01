@@ -29,7 +29,7 @@ public class PrefixCommand implements Command {
         return prefix + "prefix [character]";
     }
 
-    public String descripition() {
+    public String description() {
         return "Sets the prefix for each command to avoid conflict with other bots (Default is '!')";
     }
 

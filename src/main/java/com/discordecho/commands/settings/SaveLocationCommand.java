@@ -48,7 +48,7 @@ public class SaveLocationCommand implements Command {
         return prefix + "saveLocation | " + prefix + "saveLocation [text channel name]";
     }
 
-    public String descripition() {
+    public String description() {
         return "Sets the text channel of message or the text channel specified as the default location to send files";
     }
 

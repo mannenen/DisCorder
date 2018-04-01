@@ -46,7 +46,7 @@ public class VolumeCommand implements Command {
         return prefix + "volume [1-100]";
     }
 
-    public String descripition() {
+    public String description() {
         return "Sets the percentage volume to record at, from 1-100%";
     }
 

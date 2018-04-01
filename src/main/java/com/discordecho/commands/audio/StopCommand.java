@@ -4,10 +4,10 @@ import com.discordecho.commands.Command;
 
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
-public class RecordCommand implements Command {
+public class StopCommand implements Command {
 
 	public Boolean called(String[] args, GuildMessageReceivedEvent e) {
-		return true;
+		return null;
 	}
 
 	public void action(String[] args, GuildMessageReceivedEvent e) {
@@ -15,11 +15,11 @@ public class RecordCommand implements Command {
 	}
 
 	public String usage(String prefix) {
-		return prefix + "record [mp3|wav]";
+		return prefix + "stop";
 	}
 
 	public String description() {
-		return "Begins recording audio in the current voice channel. Does nothing if already recording.";
+		return "Stops recording the current channel. Does nothing if not already recording.";
 	}
 
 	public void executed(boolean success, GuildMessageReceivedEvent e) {

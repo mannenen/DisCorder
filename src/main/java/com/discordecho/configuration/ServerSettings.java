@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Deprecated
 public class ServerSettings {
 
     public HashMap<String, Integer> autoJoinSettings;
@@ -37,7 +38,7 @@ public class ServerSettings {
         this.alertBlackList = new ArrayList<>();
         this.prefix = "!";
         this.volume = 0.8;
-        this.defaultTextChannel = g.getPublicChannel().getId();
+        this.defaultTextChannel = g.getAfkChannel().getId();
 
 
 
