@@ -1,7 +1,8 @@
 package com.discorder.listeners;
 
 import com.discorder.commands.CommandHandler;
-import com.discorder.configuration.Config;
+import com.discorder.Config;
+import com.discorder.event.RecordingStartEvent;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
@@ -25,7 +26,7 @@ public class EventListener extends ListenerAdapter {
     }
 
     @Override
-    public void onReady(ReadyEvent e){
+    public void onReady(ReadyEvent e) {
         logger.info("DisCorder is ready!");
         
     }

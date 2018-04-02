@@ -2,7 +2,8 @@ package com.discorder.commands.settings;
 
 import com.discorder.DisCorder;
 import com.discorder.commands.Command;
-import com.discorder.configuration.Config;
+import com.discorder.Config;
+import net.dv8tion.jda.core.entities.TextChannel;
 
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
@@ -16,20 +17,20 @@ public class PrefixCommand implements Command {
 
     @Override
     public void action(String[] args, GuildMessageReceivedEvent e) {
+        TextChannel tc = e.getChannel();
         if (args[0].length() != 1 || args.length != 1) {
-            String prefix = Config.getCommandPrefix();
-            DisCorder.sendMessage(e.getChannel(), usage(prefix));
+            tc.sendMessage(usage());
             return;
         }
 
         Config.setCommandPrefix(args[0]);
 
-        DisCorder.sendMessage(e.getChannel(), "Command prefix now set to " + args[0]);
+        tc.sendMessage("Command prefix now set to " + args[0]);
     }
 
     @Override
-    public String usage(String prefix) {
-        return prefix + "prefix [character]";
+    public String usage() {
+        return Config.getCommandPrefix() + "prefix [character]";
     }
 
     @Override

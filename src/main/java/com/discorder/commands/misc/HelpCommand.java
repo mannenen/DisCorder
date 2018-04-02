@@ -2,13 +2,13 @@ package com.discorder.commands.misc;
 
 import java.awt.Color;
 
-import com.discorder.DisCorder;
 import com.discorder.commands.Command;
 import com.discorder.commands.CommandHandler;
-import com.discorder.configuration.Config;
+import com.discorder.Config;
 import java.util.Set;
 
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 
@@ -21,9 +21,9 @@ public class HelpCommand implements Command {
 
     @Override
     public void action(String[] args, GuildMessageReceivedEvent e) {
+        TextChannel tc = e.getChannel();
         if (args.length != 0) {
-            String prefix = Config.getCommandPrefix();
-            DisCorder.sendMessage(e.getChannel(), usage(prefix));
+            tc.sendMessage(usage()).queue();
             return;
         }
 
@@ -41,15 +41,15 @@ public class HelpCommand implements Command {
             Command command = CommandHandler.commands.get(cmd);
             String prefix = Config.getCommandPrefix();
 
-            embed.addField(command.usage(prefix), command.description(), true);
+            embed.addField(command.usage(), command.description(), true);
         });
         
         e.getChannel().sendMessage(embed.build()).queue();
     }
 
     @Override
-    public String usage(String prefix) {
-        return prefix + "help";
+    public String usage() {
+        return Config.getCommandPrefix() + "help";
     }
 
     @Override

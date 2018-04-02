@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.discorder.configuration;
+package com.discorder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -31,6 +33,10 @@ public final class Config {
         } catch (BackingStoreException bse) {
             logger.warn("backing store unavailable while checking preferences", bse);
         }
+    }
+    
+    public static Path getDefaultSaveDestination() {
+        return Paths.get(System.getProperty("user.home"), "recordings");
     }
     
     public static String getDefaultVoiceChannel() {

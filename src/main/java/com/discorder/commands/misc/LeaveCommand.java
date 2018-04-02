@@ -1,6 +1,7 @@
 package com.discorder.commands.misc;
 
 import com.discorder.commands.Command;
+import com.discorder.Config;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
@@ -32,8 +33,8 @@ public class LeaveCommand implements Command {
     }
 
     @Override
-    public String usage(String prefix) {
-        return prefix + "leave";
+    public String usage() {
+        return Config.getCommandPrefix() + "leave";
     }
 
     @Override

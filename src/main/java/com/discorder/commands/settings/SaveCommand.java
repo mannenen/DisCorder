@@ -1,10 +1,19 @@
-package com.discorder.commands.misc;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.discorder.commands.settings;
 
 import com.discorder.commands.Command;
-import net.dv8tion.jda.core.entities.TextChannel;
+import com.discorder.Config;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
-public class UnknownCommand implements Command {
+/**
+ *
+ * @author nathan
+ */
+public class SaveCommand implements Command {
 
     @Override
     public Boolean called(String[] args, GuildMessageReceivedEvent e) {
@@ -13,19 +22,17 @@ public class UnknownCommand implements Command {
 
     @Override
     public void action(String[] args, GuildMessageReceivedEvent e) {
-        TextChannel channel = e.getChannel();
-        channel.sendMessageFormat("I don't know what you mean by '%s", e.getMessage().getContentRaw()).queue();
-        channel.sendMessageFormat("I damn sure don't know what all this means: '%s'", String.join(" ", args)).queue();
+        
     }
 
     @Override
     public String usage() {
-        return "";
+        return Config.getCommandPrefix() + "save [location]";
     }
 
     @Override
     public String description() {
-        return "This is a default response when bot receives an unknown command.";
+        return "Sets the location where recordings will be stored. Prints the current save location if called without args.";
     }
 
     @Override

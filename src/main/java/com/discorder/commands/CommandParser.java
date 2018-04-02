@@ -1,15 +1,17 @@
 package com.discorder.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
+@Deprecated
 public class CommandParser {
     public CommandContainer parse(String raw, GuildMessageReceivedEvent e){
         ArrayList<String> split = new ArrayList<>();
         String beheaded = raw.substring(1);
         String[] splitBeheaded = beheaded.split(" ");
-        for(String s : splitBeheaded) {split.add(s);}
+        split.addAll(Arrays.asList(splitBeheaded));
         String invoke = split.get(0);
         String[] args = new String[split.size() - 1];
         split.subList(1,split.size()).toArray(args);

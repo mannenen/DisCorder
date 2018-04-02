@@ -1,7 +1,7 @@
 package com.discorder.commands.misc;
 
 import com.discorder.commands.Command;
-import com.discorder.configuration.Config;
+import com.discorder.Config;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -51,8 +51,8 @@ public class JoinCommand implements Command {
     }
 
     @Override
-    public String usage(String prefix) {
-        return prefix + "join";
+    public String usage() {
+        return Config.getCommandPrefix() + "join";
     }
 
     @Override
