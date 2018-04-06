@@ -13,6 +13,7 @@ import com.discorder.commands.misc.LeaveCommand;
 import com.discorder.commands.settings.PrefixCommand;
 import com.discorder.commands.settings.VolumeCommand;
 import com.discorder.listeners.AudioReceiveListener;
+import com.discorder.listeners.AudioSendListener;
 import com.discorder.listeners.EventListener;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,28 +51,28 @@ public class DisCorder {
                             .setToken(CLIENT_TOKEN)
                             .addEventListener(new EventListener())
                             .buildBlocking();
+
+            //register commands and their aliases
+            registerCommands();
         } catch (LoginException le) {
             logger.error("error logging in", le);
             System.exit(1);
         } catch (InterruptedException ie) {
             logger.error("thread interrupted during login", ie);
             System.exit(1);
-        }
-        
-        ArrayBlockingQueue<SampleContainer> encodeQueue = new ArrayBlockingQueue<>(4096);
-        AudioReceiveListener receiver = new AudioReceiveListener(encodeQueue);
-
-        //register commands and their aliases
+        }        
+    }
+    
+    private static void registerCommands() {
         CommandHandler.commands.put("help", new HelpCommand());
 
         CommandHandler.commands.put("join", new JoinCommand());
         CommandHandler.commands.put("leave", new LeaveCommand());
 
-        CommandHandler.commands.put("stop", new StopCommand(receiver));
-        CommandHandler.commands.put("record", new RecordCommand(receiver));
+        CommandHandler.commands.put("stop", new StopCommand());
+        CommandHandler.commands.put("record", new RecordCommand());
 
         CommandHandler.commands.put("prefix", new PrefixCommand());
         CommandHandler.commands.put("volume", new VolumeCommand());
-
     }
 }

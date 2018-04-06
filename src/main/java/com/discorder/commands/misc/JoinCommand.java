@@ -34,20 +34,21 @@ public class JoinCommand implements Command {
         if (vc == null) {
             String prefix = Config.getCommandPrefix();
             logger.error("user tried to summon bot without being in voice channel");
-            channel.sendMessage("You are not in a voice channel, I don't know where to go").queue();
-            channel.sendMessage("Join one of these lovely voice channels, then summon me with %sjoin".format(prefix)).queue();
+            channel.sendMessage("You are not in a voice channel, I don't know where to go?").queue();
             return;
         }
         
-        AudioManager am = e.getGuild().getAudioManager();
+        AudioManager am = vc.getGuild().getAudioManager();
         if (am.isAttemptingToConnect()) {
             logger.error("tried to join a voice channel while already trying to join a voice channel");
             channel.sendMessage("I'm already trying to join a channel, please wait.").queue();
             return;
         }
         
+        logger.debug("opening audio connection");
         am.openAudioConnection(vc);
         channel.sendMessage("Hello, friends. I am here and ready to record.").queue();
+        
     }
 
     @Override
@@ -57,7 +58,7 @@ public class JoinCommand implements Command {
 
     @Override
     public String description() {
-        return "Summons the bot to your current voice channel to make him available to record.";
+        return "Summons the bot to your current voice channel to make it available to record.";
     }
 
     @Override

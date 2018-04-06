@@ -2,7 +2,6 @@ package com.discorder.listeners;
 
 import com.discorder.commands.CommandHandler;
 import com.discorder.Config;
-import com.discorder.event.RecordingStartEvent;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;

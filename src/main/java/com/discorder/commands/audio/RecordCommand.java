@@ -2,12 +2,9 @@ package com.discorder.commands.audio;
 
 import com.discorder.commands.Command;
 import com.discorder.Config;
-import com.discorder.WriteAudioTask;
+import com.discorder.event.EventManager;
+import com.discorder.event.RecordEvent;
 import com.discorder.listeners.AudioReceiveListener;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
@@ -17,12 +14,7 @@ import org.slf4j.LoggerFactory;
 public class RecordCommand implements Command {
 
     private final static Logger logger = LoggerFactory.getLogger(RecordCommand.class);
-    private final AudioReceiveListener receiver;
     
-    public RecordCommand(AudioReceiveListener receiver) {
-        this.receiver = receiver;
-    }
-
     @Override
     public Boolean called(String[] args, GuildMessageReceivedEvent e) {
         return true;
@@ -30,13 +22,9 @@ public class RecordCommand implements Command {
 
     @Override
     public void action(String[] args, GuildMessageReceivedEvent e) {
-        logger.debug("received record command");
-        TextChannel tc = e.getChannel();
-        tc.sendMessage("I am recording your every word.").queue();
-        
-        this.receiver.start();
-        
-        
+        logger.debug("queueing recordStartEvent");
+        RecordEvent event = new RecordEvent(RecordEvent.EventType.START, e.getAuthor(), e.getGuild(), e.getChannel());
+        EventManager.getInstance().queueEvent(event);
     }
 
     @Override

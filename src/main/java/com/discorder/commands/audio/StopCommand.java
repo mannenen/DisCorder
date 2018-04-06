@@ -2,8 +2,8 @@ package com.discorder.commands.audio;
 
 import com.discorder.commands.Command;
 import com.discorder.Config;
-import com.discorder.listeners.AudioReceiveListener;
-import net.dv8tion.jda.core.entities.TextChannel;
+import com.discorder.event.EventManager;
+import com.discorder.event.RecordEvent;
 
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
@@ -11,11 +11,6 @@ import org.slf4j.LoggerFactory;
 
 public class StopCommand implements Command {
     private final static Logger logger = LoggerFactory.getLogger(StopCommand.class);
-    private final AudioReceiveListener receiver;
-    
-    public StopCommand(AudioReceiveListener receiver) {
-        this.receiver = receiver;
-    }
     
     @Override
     public Boolean called(String[] args, GuildMessageReceivedEvent e) {
@@ -24,15 +19,8 @@ public class StopCommand implements Command {
 
     @Override
     public void action(String[] args, GuildMessageReceivedEvent e) {
-        logger.debug("received stop command");
-        TextChannel tc = e.getChannel();
+        logger.debug("enqueueing record stop event");
         
-        if (!this.receiver.canReceiveCombined()) {
-            tc.sendMessage("It's cool, I was already not recording anyway, so I will continue not recording.").queue();
-        } else {
-            this.receiver.stop();
-            tc.sendMessage("OK, I have stopped recording.").queue();
-        }
     }
 
     @Override
