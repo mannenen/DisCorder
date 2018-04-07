@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import javax.security.auth.login.LoginException;
 
 import com.discorder.commands.CommandHandler;
+import com.discorder.commands.audio.PauseCommand;
 import com.discorder.commands.audio.RecordCommand;
 import com.discorder.commands.audio.StopCommand;
 import com.discorder.commands.misc.HelpCommand;
@@ -12,13 +13,12 @@ import com.discorder.commands.misc.JoinCommand;
 import com.discorder.commands.misc.LeaveCommand;
 import com.discorder.commands.settings.PrefixCommand;
 import com.discorder.commands.settings.VolumeCommand;
-import com.discorder.listeners.AudioReceiveListener;
-import com.discorder.listeners.AudioSendListener;
+import com.discorder.event.EventManager;
 import com.discorder.listeners.EventListener;
+import com.discorder.listeners.RecordEventListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -54,6 +54,8 @@ public class DisCorder {
 
             // register commands and their aliases
             registerCommands();
+            
+            EventManager.getInstance().addListener(new RecordEventListener());
         } catch (LoginException le) {
             logger.error("error logging in", le);
             System.exit(1);

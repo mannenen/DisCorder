@@ -5,6 +5,7 @@
  */
 package com.discorder.listeners;
 
+import com.discorder.ProgramState;
 import com.discorder.WriteAudioTask;
 import com.discorder.event.RecordEvent;
 import com.discorder.event.handler.RecordEventHandler;
@@ -35,6 +36,11 @@ public class RecordEventListener implements RecordEventHandler {
     @Override
     public void onStart(RecordEvent e) {
         logger.info("begin recording");
+        if (ProgramState.getProgramState() == ProgramState.State.RECORDING) {
+            e.getChannel().sendMessage("I am already recording.").queue();
+            return;
+        }
+        
         logger.debug("start stream-to-disk task");
         task.start();
 
@@ -53,7 +59,7 @@ public class RecordEventListener implements RecordEventHandler {
         logger.debug("insert audio listener");
         e.getGuild().getAudioManager().setReceivingHandler(listener);
 
-        ProgramState.setProgramState(ProgramState.State.STOPPED);
+        ProgramState.setProgramState(ProgramState.State.RECORDING);
 
         logger.debug("notify text channel");
         e.getChannel().sendMessage("I have begun to record.").queue();
@@ -62,7 +68,7 @@ public class RecordEventListener implements RecordEventHandler {
     @Override
     public void onPause(RecordEvent e) {
         logger.info("pause recording - NOT YET IMPLEMENTED");
-        if (ProgramState.state == ProgramState.State.PAUSED) {
+        if (ProgramState.getProgramState() == ProgramState.State.PAUSED) {
             e.getChannel().sendMessage("I am already paused. I can't do it again.").queue();
             return;
         }
@@ -71,7 +77,7 @@ public class RecordEventListener implements RecordEventHandler {
     @Override
     public void onStop(RecordEvent e) {
         logger.info("stop recording");
-        if (ProgramState.state == ProgramState.State.STOPPED) {
+        if (ProgramState.getProgramState() == ProgramState.State.STOPPED) {
             e.getChannel().sendMessage("I was already not recording, so I will continue to not do so.").queue();
             return;
         }
@@ -80,7 +86,7 @@ public class RecordEventListener implements RecordEventHandler {
         e.getGuild().getAudioManager().setReceivingHandler(null);
 
         logger.debug("signal write task finish");
-        task.finish();
+        task.stop();
 
         logger.debug("reset nickname");
         Member me = e.getGuild().getSelfMember();

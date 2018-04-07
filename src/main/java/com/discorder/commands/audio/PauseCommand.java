@@ -1,5 +1,11 @@
 package com.discorder.commands.audio;
 
+import com.discorder.Config;
+import com.discorder.commands.Command;
+import com.discorder.event.EventManager;
+import com.discorder.event.RecordEvent;
+import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
+
 public class PauseCommand implements Command {
 
     @Override
@@ -15,7 +21,7 @@ public class PauseCommand implements Command {
 
     @Override
     public String usage() {
-        return Config.getCommandPrefix + "pause";
+        return Config.getCommandPrefix() + "pause";
     }
 
     @Override

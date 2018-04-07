@@ -20,7 +20,8 @@ public class StopCommand implements Command {
     @Override
     public void action(String[] args, GuildMessageReceivedEvent e) {
         logger.debug("enqueueing record stop event");
-        
+        RecordEvent event = new RecordEvent(RecordEvent.EventType.STOP, e.getAuthor(), e.getGuild(), e.getChannel());
+        EventManager.getInstance().queueEvent(event);
     }
 
     @Override

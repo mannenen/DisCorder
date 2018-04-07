@@ -2,6 +2,7 @@ package com.discorder.listeners;
 
 import com.discorder.commands.CommandHandler;
 import com.discorder.Config;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;

@@ -31,11 +31,18 @@ public class WriteAudioTask {
         this.executor.scheduleAtFixedRate(this::run, 0, 20, TimeUnit.MILLISECONDS);
     }
     
-    public void stop() throws InterruptedException {
-        this.executor.awaitTermination(60, TimeUnit.SECONDS);
+    public void stop() {
+        while (!this.encodePipeline.isEmpty()) {
+            try {
+                this.executor.awaitTermination(30, TimeUnit.SECONDS);
+            } catch (InterruptedException ex) {
+                logger.debug("interrupted waiting for executor to finish", ex);
+            }
+        }
     }
 
     private void run() {
         logger.debug("samples in encode queue: {}", this.encodePipeline.size());
+        this.encodePipeline.poll();
     }
 }
