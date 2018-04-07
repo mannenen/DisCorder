@@ -29,10 +29,10 @@ import org.slf4j.LoggerFactory;
 public class DisCorder {
     private final static Logger logger = LoggerFactory.getLogger(DisCorder.class);
     private final static String CLIENT_TOKEN = readToken("token");
-    
+
     private static String readToken(String fileName) {
         String token = "";
-        
+
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
                 BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             token = br.readLine().trim();
@@ -40,19 +40,19 @@ public class DisCorder {
             logger.error("unable to read/find client auth token, cannot continue", ioe);
             System.exit(1);
         }
-        
+
         return token;
     }
 
     public static void main(String[] args) {
         try {
-            //create bot instance
+            // create bot instance
             JDA api = new JDABuilder(AccountType.BOT)
                             .setToken(CLIENT_TOKEN)
                             .addEventListener(new EventListener())
                             .buildBlocking();
 
-            //register commands and their aliases
+            // register commands and their aliases
             registerCommands();
         } catch (LoginException le) {
             logger.error("error logging in", le);
@@ -60,9 +60,9 @@ public class DisCorder {
         } catch (InterruptedException ie) {
             logger.error("thread interrupted during login", ie);
             System.exit(1);
-        }        
+        }
     }
-    
+
     private static void registerCommands() {
         CommandHandler.commands.put("help", new HelpCommand());
 
@@ -71,6 +71,7 @@ public class DisCorder {
 
         CommandHandler.commands.put("stop", new StopCommand());
         CommandHandler.commands.put("record", new RecordCommand());
+        CommandHandler.commands.put("pause", new PauseCommand());
 
         CommandHandler.commands.put("prefix", new PrefixCommand());
         CommandHandler.commands.put("volume", new VolumeCommand());

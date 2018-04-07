@@ -27,19 +27,21 @@ public class EventListener extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent e) {
         logger.info("DisCorder is ready!");
-        
+
     }
-    
+
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
         logger.debug(e.getMessage().getContentRaw());
-        if(e.getMember() == null || e.getMember().getUser() == null || e.getMember().getUser().isBot())
+        Member sender = e.getMember();
+        if(sender == null || sender.getUser() == null || sender.getUser().isBot())
             return;
 
         String prefix = Config.getCommandPrefix();
+        String messageRaw = e.getMessage().getContentRaw();
         //force help to always work with "!" prefix
-        if (e.getMessage().getContentRaw().startsWith(prefix) || e.getMessage().getContentRaw().startsWith("!help")) {
-            CommandHandler.handleCommand(CommandHandler.parser.parse(e.getMessage().getContentRaw().toLowerCase(), e));
-}
+        if (messageRaw.startsWith(prefix) || messageRaw.startsWith("!help")) {
+            CommandHandler.handleCommand(CommandHandler.parser.parse(messageRaw.toLowerCase(), e));
+        }
     }
 }
