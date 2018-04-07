@@ -17,19 +17,26 @@ public class RecordEvent {
     public enum EventType {
         START, STOP, PAUSE
     }
-    
+
     private final EventType type;
     private final Guild guild;
     private final User user;
     private final TextChannel channel;
-    
+
+    public RecordEvent(EventType type, RecordEvent event) {
+        this.type = type;
+        this.user = event.user;
+        this.guild = event.guild;
+        this.channel = event.channel;
+    }
+
     public RecordEvent(EventType type, User author, Guild guild, TextChannel channel) {
         this.type = type;
         this.user = author;
         this.guild = guild;
         this.channel = channel;
     }
-    
+
     public EventType getEventType() {
         return this.type;
     }
@@ -41,7 +48,7 @@ public class RecordEvent {
     public User getUser() {
         return user;
     }
-    
+
     public TextChannel getChannel() {
         return this.channel;
     }
