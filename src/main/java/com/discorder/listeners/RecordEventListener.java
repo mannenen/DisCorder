@@ -30,7 +30,7 @@ public class RecordEventListener implements RecordEventHandler {
         encodePipeline = new ConcurrentLinkedQueue<>();
         listener = new AudioReceiveListener(encodePipeline);
         task = new WriteAudioTask(encodePipeline);
-        botName = "DisCorder";
+        botName = Config.getDefaultBotName();
     }
 
     @Override
@@ -40,14 +40,14 @@ public class RecordEventListener implements RecordEventHandler {
             e.getChannel().sendMessage("I am already recording.").queue();
             return;
         }
-        
+
         logger.debug("start stream-to-disk task");
         task.start();
 
         logger.debug("attempt to change nickname");
         Member me = e.getGuild().getSelfMember();
         botName = me.getNickname();
-        e.getGuild().getController().setNickname(me, me.getNickname() + " - RECORDING").queue();
+        e.getGuild().getController().setNickname(me, this.botName + " - RECORDING").queue();
 
         if (!me.getNickname().contains("RECORDING")) {
             logger.error("nickname change failed, notify channel then quit");
@@ -56,13 +56,13 @@ public class RecordEventListener implements RecordEventHandler {
             return;
         }
 
+        logger.debug("notify text channel");
+        e.getChannel().sendMessage("I have begun to record.").queue();
+
         logger.debug("insert audio listener");
         e.getGuild().getAudioManager().setReceivingHandler(listener);
 
         ProgramState.setProgramState(ProgramState.State.RECORDING);
-
-        logger.debug("notify text channel");
-        e.getChannel().sendMessage("I have begun to record.").queue();
     }
 
     @Override

@@ -54,13 +54,13 @@ public class DisCorder {
 
             // register commands and their aliases
             registerCommands();
-            
+
             EventManager.getInstance().addListener(new RecordEventListener());
         } catch (LoginException le) {
             logger.error("error logging in", le);
             System.exit(1);
         } catch (InterruptedException ie) {
-            logger.error("thread interrupted during login", ie);
+            logger.error("thread interrupted during login, possibly due to VM shutdown", ie);
             System.exit(1);
         }
     }

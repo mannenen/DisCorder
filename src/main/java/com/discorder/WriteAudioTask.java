@@ -18,32 +18,33 @@ import org.slf4j.LoggerFactory;
  */
 public class WriteAudioTask {
     private final static Logger logger = LoggerFactory.getLogger(WriteAudioTask.class);
-    private final ConcurrentLinkedQueue<byte[]> encodePipeline;
+    private final ConcurrentLinkedQueue<byte[]> pipeline;
     private final ScheduledExecutorService executor;
     private File audioFile;
+    private FileOutputStream outStream;
 
     public WriteAudioTask(ConcurrentLinkedQueue<byte[]> pipeline) {
-        this.encodePipeline = pipeline;
+        this.pipeline = pipeline;
 
         this.executor = Executors.newSingleThreadScheduledExecutor();
     }
 
-    private boolean initFile(final String dirName) {
+    private void initFile(final String dirName) {
         String fileName = new SimpleDateFormatter("yyyy-MM-dd - hh.mm.ss").format(new Date()) + ".mp3";
         Path path = Paths.get(dirName);
 
         if (Files.notExists(path)) {
             logger.info("target file {} will be created", dirName);
-            this.audioFile = Files.createFile(Files.createDirectories(dirName), fileName).toFile();
-            return true;
+            Paths.createDirectories(path);
         }
 
-        return false;
+        this.audioFile = path.resolve(Paths.get(dirName)).toFile();
     }
 
     public void start(String fileName) {
         try {
             this.initFile(fileName);
+            this.outStream = new FileOutputStream(this.audioFile);
             this.executor.scheduleAtFixedRate(this::run, 0, 20, TimeUnit.MILLISECONDS);
         } except (IOException ioe) {
             logger.error("unable to open audio file for writing", ioe);
@@ -51,25 +52,26 @@ public class WriteAudioTask {
     }
 
     public void stop() {
-        while (!this.encodePipeline.isEmpty()) {
-            try {
-                this.executor.awaitTermination(5, TimeUnit.SECONDS);
-            } catch (InterruptedException ex) {
-                logger.debug("interrupted waiting for executor to finish", ex);
-            }
+        logger.debug("wait for encode pipeline to empty");
+        while (!this.pipeline.isEmpty()) {
+            logger.info("encode pipeline not empty, sleeping");
+            Thread.currentThread().sleep(1000);
         }
 
-        try {
-            this.audioFile.close();
-        } catch (IOException ioe) {
-            logger.error("got error during file close, whatever", ioe);
-        }
+        logger.debug("close output stream");
+        this.outStream.close();
+
+        logger.debug("wait for encode thread to terminate");
+        this.executor.awaitTermination(5, TimeUnit.SECONDS);
     }
 
     private void run() {
-        logger.debug("samples in encode queue: {}", this.encodePipeline.size());
-        byte[] sample = this.encodePipeline.poll();
+        logger.debug("samples in encode queue: {}", this.pipeline.size());
 
-        
+        logger.debug("take sample from encode pipeline");
+        byte[] sample = this.pipeline.poll();
+
+        logger.debug("write sample to file");
+        this.outStream.write(this.audioFile, sample);
     }
 }
