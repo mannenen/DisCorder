@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
-@Deprecated
 public class CommandParser {
     public CommandContainer parse(String raw, GuildMessageReceivedEvent e){
         ArrayList<String> split = new ArrayList<>();

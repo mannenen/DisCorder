@@ -62,7 +62,6 @@ public class EventManager {
         if (!this.eventQueue.isEmpty()) {
             try {
                 RecordEvent event = this.eventQueue.remove();
-                logger.debug(event.toString());
 
                 switch (event.getEventType()) {
                     case PAUSE:

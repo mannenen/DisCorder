@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.core.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.slf4j.Logger;
@@ -17,12 +18,19 @@ public class EventListener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent e) {
-        logger.info("Joined new server '%s'", e.getGuild().getName());
+        logger.info("Joined new server {}", e.getGuild().getName());
     }
 
     @Override
     public void onGuildLeave(GuildLeaveEvent e) {
-        logger.info("Left server '%s'", e.getGuild().getName());
+        logger.info("Left server {}", e.getGuild().getName());
+    }
+    
+    @Override
+    public void onGuildVoiceJoin(GuildVoiceJoinEvent e) {
+        logger.info("successfully joined voice channel {}", e.getChannelJoined().getName());
+        e.getChannelJoined().getGuild().getAudioManager().setSendingHandler(new AudioSendListener());
+        
     }
 
     @Override

@@ -40,7 +40,7 @@ public final class Config {
     }
 
     public static void setDefaultSaveDestination(Path folder) {
-        prefs.set("bot.default.savedir", folder.toString());
+        prefs.put("bot.default.savedir", folder.toString());
     }
 
     public static void setCommandPrefix(String prefix) {
@@ -56,7 +56,7 @@ public final class Config {
     }
 
     public static void setDefaultBotName(String name) {
-        prefs.set("bot.defaultName", name);
+        prefs.put("bot.defaultName", name);
     }
 
     public void restoreDefaults() {
@@ -91,7 +91,7 @@ public final class Config {
             }
 
             prefs.put("bot.default.name", "DisCorder");
-            prefs.put("bot.default.savedir", Config.getDefaultSaveDestination());
+            prefs.put("bot.default.savedir", Config.getDefaultSaveDestination().toString());
         } catch (IOException ioe) {
             logger.error("unable to load default preferences, is config.properties missing?", ioe);
         }

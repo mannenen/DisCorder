@@ -12,7 +12,6 @@ import com.discorder.commands.misc.HelpCommand;
 import com.discorder.commands.misc.JoinCommand;
 import com.discorder.commands.misc.LeaveCommand;
 import com.discorder.commands.settings.PrefixCommand;
-import com.discorder.commands.settings.VolumeCommand;
 import com.discorder.event.EventManager;
 import com.discorder.listeners.EventListener;
 import com.discorder.listeners.RecordEventListener;
@@ -63,6 +62,8 @@ public class DisCorder {
             logger.error("thread interrupted during login, possibly due to VM shutdown", ie);
             System.exit(1);
         }
+        
+        ProgramState.setProgramState(ProgramState.State.STOPPED);
     }
 
     private static void registerCommands() {
@@ -76,6 +77,5 @@ public class DisCorder {
         CommandHandler.commands.put("pause", new PauseCommand());
 
         CommandHandler.commands.put("prefix", new PrefixCommand());
-        CommandHandler.commands.put("volume", new VolumeCommand());
     }
 }

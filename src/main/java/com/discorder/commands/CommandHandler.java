@@ -2,7 +2,6 @@ package com.discorder.commands;
 
 import java.util.HashMap;
 
-@Deprecated
 public class CommandHandler {
     public static final CommandParser parser = new CommandParser();
     public static HashMap<String, Command> commands = new HashMap<>();

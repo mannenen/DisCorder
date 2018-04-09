@@ -6,6 +6,7 @@
 package com.discorder.listeners;
 
 import java.nio.ByteBuffer;
+import java.util.Date;
 import net.dv8tion.jda.core.audio.AudioSendHandler;
 
 /**
@@ -13,10 +14,16 @@ import net.dv8tion.jda.core.audio.AudioSendHandler;
  * @author nathan
  */
 public class AudioSendListener implements AudioSendHandler {
+    private Date startTime;
+    
+    public AudioSendListener() {
+        startTime = new Date();
+    }
     
     @Override
     public boolean canProvide() {
-        return true;
+        Date now = new Date();
+        return (((now.getTime() - startTime.getTime()) / 1000) < 2);
     }
 
     @Override
