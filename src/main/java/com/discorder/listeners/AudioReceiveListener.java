@@ -35,9 +35,11 @@ public class AudioReceiveListener implements AudioReceiveHandler
     public void handleCombinedAudio(CombinedAudio combinedAudio) {
         byte[] pcmData = combinedAudio.getAudioData(1.0);
             
-        byte[] mp3Data = this.encodePcmToMp3(pcmData);
+        //byte[] mp3Data = this.encodePcmToMp3(pcmData);
 
-        this.queue.add(mp3Data);
+        //this.queue.add(mp3Data);
+        
+        this.queue.add(pcmData);
     }
 
     @Override

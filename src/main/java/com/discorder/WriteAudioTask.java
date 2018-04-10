@@ -53,8 +53,8 @@ public class WriteAudioTask {
         this.audioFile = dirName.resolve(Paths.get(fileName)).toFile();
     }
 
-    public void start(Path fileName) {
-        this.initFile(fileName);
+    public void start(Path dirName) {
+        this.initFile(dirName);
         try {
             this.outStream = new FileOutputStream(this.audioFile);
         } catch (FileNotFoundException ex) {

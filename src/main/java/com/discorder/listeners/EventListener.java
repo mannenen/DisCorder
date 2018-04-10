@@ -29,8 +29,7 @@ public class EventListener extends ListenerAdapter {
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent e) {
         logger.info("successfully joined voice channel {}", e.getChannelJoined().getName());
-        e.getChannelJoined().getGuild().getAudioManager().setSendingHandler(new AudioSendListener());
-        
+        e.getGuild().getAudioManager().setSendingHandler(new AudioSendListener());
     }
 
     @Override
@@ -41,7 +40,6 @@ public class EventListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
-        logger.debug(e.getMessage().getContentRaw());
         Member sender = e.getMember();
         if(sender == null || sender.getUser() == null || sender.getUser().isBot())
             return;

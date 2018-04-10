@@ -38,30 +38,32 @@ public class RecordEventListener implements RecordEventHandler {
     public void onStart(RecordEvent e) {
         logger.info("begin recording");
         if (ProgramState.getProgramState() == ProgramState.State.RECORDING) {
-            e.getChannel().sendMessage("I am already recording.").complete();
+            e.getChannel().sendMessage("I am already recording.").queue();
             return;
         }
-
-        logger.debug("start stream-to-disk task");
-        task.start(Config.getDefaultSaveDestination());
 
         logger.debug("attempt to change nickname");
+        
+        
         Member me = e.getGuild().getSelfMember();
-        e.getGuild().getController().setNickname(me, this.botName + " - RECORDING").complete();
-
-        if (!me.getNickname().contains("RECORDING")) {
-            logger.error("nickname change failed, notify channel then quit");
-            e.getChannel().sendMessage("I was unable to begin recording, because I could not change my own nickname.").complete();
-            e.getChannel().sendMessage("Please make sure I have permission to do that, then try again.").complete();
-            return;
-        }
-
-        logger.debug("notify text channel");
-        e.getChannel().sendMessage("I have begun to record.").complete();
-
-        logger.debug("insert audio listener");
+        e.getGuild().getController().setNickname(me, this.botName + " - RECORDING").queue(
+            (x) -> {
+                logger.debug("notify text channel");
+                e.getChannel().sendMessage("I have begun to record.").queue();
+            },
+            (x) -> {
+                logger.error("nickname change failed, notify channel then quit");
+                e.getChannel().sendMessage("I was unable to begin recording, because I could not change my own nickname.").queue();
+                return;
+            }
+        );        
+        
+        logger.debug("insert audio listeners");
         e.getGuild().getAudioManager().setReceivingHandler(listener);
-
+        
+        logger.debug("start stream-to-disk task");
+        task.start(Config.getDefaultSaveDestination());
+        
         ProgramState.setProgramState(ProgramState.State.RECORDING);
     }
 
@@ -81,21 +83,21 @@ public class RecordEventListener implements RecordEventHandler {
             e.getChannel().sendMessage("I was already not recording, so I will continue to not do so.").complete();
             return;
         }
+        
+        logger.debug("reset nickname");
+        Member me = e.getGuild().getSelfMember();
+        e.getGuild().getController().setNickname(me, this.botName).complete();
+
+        ProgramState.setProgramState(ProgramState.State.STOPPED);
+        
+        logger.debug("notify text channel");
+        e.getChannel().sendMessage("I'm no longer recording.").complete();
 
         logger.debug("remove AudioReceiveListener");
         e.getGuild().getAudioManager().setReceivingHandler(null);
 
         logger.debug("signal write task finish");
         task.stop();
-
-        logger.debug("reset nickname");
-        Member me = e.getGuild().getSelfMember();
-        e.getGuild().getController().setNickname(me, this.botName).complete();
-
-        ProgramState.setProgramState(ProgramState.State.STOPPED);
-
-        logger.debug("notify text channel");
-        e.getChannel().sendMessage("I'm no longer recording.").complete();
     }
 
 }

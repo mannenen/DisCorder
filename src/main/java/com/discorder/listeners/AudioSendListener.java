@@ -14,21 +14,15 @@ import net.dv8tion.jda.core.audio.AudioSendHandler;
  * @author nathan
  */
 public class AudioSendListener implements AudioSendHandler {
-    private Date startTime;
-    
-    public AudioSendListener() {
-        startTime = new Date();
-    }
     
     @Override
     public boolean canProvide() {
-        Date now = new Date();
-        return (((now.getTime() - startTime.getTime()) / 1000) < 2);
+        return true;
     }
 
     @Override
     public byte[] provide20MsAudio() {
-        return ByteBuffer.allocate(Integer.BYTES).putInt(0).array();
+        return ByteBuffer.allocate(Integer.BYTES).putInt(-127).array();
     }
 
     @Override
